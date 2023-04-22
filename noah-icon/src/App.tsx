@@ -1,14 +1,16 @@
 import "./App.css";
-import Three from "./three";
+import ModelConfig from "./Config";
+import Three from "./Model";
 
 function App() {
   return (
-    <>
-      <div>
+    <div className="fixed top-0 left-0 w-full h-full">
+      <div className="w-full h-[80%]">
         <Three />
       </div>
-      <h1>NOAH Icon</h1>
-    </>
+
+      <ModelConfig className="p-6" />
+    </div>
   );
 }
 
