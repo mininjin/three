@@ -20,14 +20,13 @@ type Props = {
 const Particles: FC<Props> = ({ size, colorFrom, colorTo }) => {
   const points = useRef<Points<SphereGeometry, ShaderMaterial>>(null);
   const attributes = useMemo(() => {
-    const seeds = Array(size)
+    const positions = Array(size)
       .fill(0)
-      .map((_, i) => i / size);
-    const positions = seeds.reduce<number[]>((arr, i) => {
-      const theta = 2 * Math.PI * i;
-      const r = 0.1 + 0.9 * Math.random();
-      return arr.concat([r * Math.cos(theta), r * Math.sin(theta), 0]);
-    }, []);
+      .reduce<number[]>((arr, _, i) => {
+        const r = Math.random();
+        const theta = ((1 / 2) * (Math.PI * i)) / size;
+        return arr.concat([r * Math.cos(theta), r * Math.sin(theta), 0]);
+      }, []);
     const fromHex = getRGBFromColorCode(colorFrom);
     const toHex = getRGBFromColorCode(colorTo);
     const colors = Array(size)
@@ -45,8 +44,7 @@ const Particles: FC<Props> = ({ size, colorFrom, colorTo }) => {
       }, []);
     const position = new Float32BufferAttribute(positions, 3);
     const color = new Uint8BufferAttribute(colors, 4, true);
-    const seed = new Float32BufferAttribute(seeds, 1);
-    return { position, color, seed };
+    return { position, color };
   }, [colorFrom, colorTo, size]);
 
   const uniforms = useMemo<Record<string, IUniform>>(
@@ -54,7 +52,11 @@ const Particles: FC<Props> = ({ size, colorFrom, colorTo }) => {
       u_size: { value: 2.0 },
       u_time: { value: 0.0 },
       u_dt: { value: 0.0 },
-      u_period: { value: 1 },
+      u_period: { value: 10 },
+      u_time_randomness: { value: 0.01 },
+      u_radius_velocity: { value: 100 },
+      u_theta_velocity: { value: 0.001 },
+      u_min_radius: { value: 0.5 },
     }),
     []
   );

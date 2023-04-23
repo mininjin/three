@@ -12,7 +12,7 @@ const ColorToAtom = atom<string>({
 
 const AmountAtom = atom<number>({
   key: "ParticleAmountAtom",
-  default: 1000,
+  default: 5000,
 });
 
 export const useColorFromState = () => useRecoilState(ColorFromAtom);
