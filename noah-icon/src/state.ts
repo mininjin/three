@@ -15,6 +15,11 @@ const AmountAtom = atom<number>({
   default: 5000,
 });
 
+const PeriodAtom = atom<number>({
+  key: "ParticlePeriodAtom",
+  default: 1,
+});
+
 export const useColorFromState = () => useRecoilState(ColorFromAtom);
 export const useColorToState = () => useRecoilState(ColorToAtom);
 
@@ -23,3 +28,6 @@ export const useColorToValue = () => useRecoilValue(ColorToAtom);
 
 export const useAmountState = () => useRecoilState(AmountAtom);
 export const useAmountValue = () => useRecoilValue(AmountAtom);
+
+export const usePeriodState = () => useRecoilState(PeriodAtom);
+export const usePeriodValue = () => useRecoilValue(PeriodAtom);

@@ -1,3 +1,6 @@
+float saturate(float x) {
+  return clamp(x, 0.0, 1.0);
+}
 
 // 2D Random
 float random(in vec2 st) {
@@ -28,6 +31,10 @@ float noise(in vec2 st) {
     (d - b) * u.x * u.y;
 }
 
+mat2 rotate2d(float _angle) {
+  return mat2(cos(_angle), -sin(_angle), sin(_angle), cos(_angle));
+}
+
 //////////////////////////////
 // source
 //////////////////////////////
@@ -40,8 +47,23 @@ attribute vec4 color;
 uniform float u_size;
 uniform float u_dt;
 uniform float u_period;
+uniform float u_rotate;
 
 uniform float u_time;
+
+vec2 getPositonA(vec2 pos, float t) {
+  float r = length(pos);
+  pos.x = sin(t) + 0.5 * noise(vec2(pos.x, t)) * sin(t * noise(vec2(r, seed * t)));
+  pos.y = sin(t) * cos(t) + 1. * noise(vec2(pos.y, t)) * sin(t * noise(vec2(r, seed * t))) + 0.5 * sin(noise(vec2(r, seed * t)));
+  return pos;
+}
+
+vec2 getPositonB(vec2 pos, float t) {
+  float r = length(pos);
+  pos.x = sin(t) * cos(t) + 1. * noise(vec2(pos.x, t)) * sin(t * noise(vec2(r, seed * t))) + 0.5 * sin(noise(vec2(r, seed * t)));
+  pos.y = sin(t) + 0.5 * noise(vec2(pos.y, t)) * sin(t * noise(vec2(r, seed * t)));
+  return pos;
+}
 
 void main() {
   vColor = color;
@@ -52,13 +74,15 @@ void main() {
   float t = u_time / u_period + 2. * PI * seed;
   float dt = u_dt / u_period;
 
-  pos.x = 2. * sin(t) + 0.5 * noise(vec2(pos.x, t));
-  pos.y = sin(t) * cos(t) + 0.5 * noise(vec2(pos.y, t));
-
-  float theta = atan(pos.y, pos.x);
   float r = length(pos);
-  theta += 0.1 * sin(t) * dt;
-  pos = r * vec2(cos(theta), sin(theta));
+
+  pos = seed * getPositonA(pos, t) + (1. - seed) * getPositonB(pos, t);
+  pos = rotate2d(noise(vec2(t, dt)) * 0.0001) * pos;
+
+  r = length(pos);
+  pos = pos * saturate(0.3 * r + 0.7 * noise(vec2(r, t))) / r;
+
+  pos = rotate2d(u_rotate) * pos;
 
   modelPosition.xy = pos;
 

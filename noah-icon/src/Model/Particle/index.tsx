@@ -13,11 +13,19 @@ import { fragmentShader, vertexShader } from "./shaders";
 
 type Props = {
   size: number;
+  period: number;
   colorFrom: string;
   colorTo: string;
+  rotate?: number;
 };
 
-const Particles: FC<Props> = ({ size, colorFrom, colorTo }) => {
+const Particles: FC<Props> = ({
+  size,
+  colorFrom,
+  colorTo,
+  period,
+  rotate = 0,
+}) => {
   const points = useRef<Points<SphereGeometry, ShaderMaterial>>(null);
   const attributes = useMemo(() => {
     const seeds = Array(size)
@@ -49,14 +57,16 @@ const Particles: FC<Props> = ({ size, colorFrom, colorTo }) => {
     return { position, color, seed };
   }, [colorFrom, colorTo, size]);
 
+  const u_period = useRef(period);
   const uniforms = useMemo<Record<string, IUniform>>(
     () => ({
-      u_size: { value: 2.0 },
+      u_size: { value: 1.0 },
       u_time: { value: 0.0 },
       u_dt: { value: 0.0 },
-      u_period: { value: 1 },
+      u_period: { value: u_period.current },
+      u_rotate: { value: rotate },
     }),
-    []
+    [rotate]
   );
 
   const init = useRef(false);
@@ -71,6 +81,7 @@ const Particles: FC<Props> = ({ size, colorFrom, colorTo }) => {
       const time = clock.getElapsedTime();
       points.current.material.uniforms.u_time.value = time;
       points.current.material.uniforms.u_dt.value = time - state.clock.oldTime;
+      points.current.material.uniforms.u_period.value = u_period.current;
     }
   });
 
@@ -79,6 +90,10 @@ const Particles: FC<Props> = ({ size, colorFrom, colorTo }) => {
       init.current = false;
     }
   }, [colorFrom, colorTo]);
+
+  useEffect(() => {
+    u_period.current = period;
+  }, [period]);
 
   return (
     <points ref={points}>
