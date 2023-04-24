@@ -8,8 +8,8 @@ import {
   SphereGeometry,
   Uint8BufferAttribute,
 } from "three";
-import { getRGBFromColorCode } from "../../lib/color";
-import { fragmentShader, vertexShader } from "./shaders";
+import { getRGBFromColorCode } from "../../../lib/color";
+import { fragmentShader, vertexShader } from "../shaders";
 
 type Props = {
   size: number;

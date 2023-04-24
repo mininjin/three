@@ -4,7 +4,7 @@ import {
   useColorFromState,
   useColorToState,
   usePeriodState,
-} from "../state";
+} from "../../state";
 import ColorConfig from "./Color";
 import AmountConfig from "./Amount";
 import PeriodConfig from "./Period";

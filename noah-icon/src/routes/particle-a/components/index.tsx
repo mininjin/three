@@ -8,25 +8,34 @@ import {
   SphereGeometry,
   Uint8BufferAttribute,
 } from "three";
-import { getRGBFromColorCode } from "../../lib/color";
+import { getRGBFromColorCode } from "../../../lib/color";
 import { fragmentShader, vertexShader } from "./shaders";
 
 type Props = {
   size: number;
+  period: number;
   colorFrom: string;
   colorTo: string;
+  rotate?: number;
 };
 
-const Particles: FC<Props> = ({ size, colorFrom, colorTo }) => {
+const Particles: FC<Props> = ({
+  size,
+  colorFrom,
+  colorTo,
+  period,
+  rotate = 0,
+}) => {
   const points = useRef<Points<SphereGeometry, ShaderMaterial>>(null);
   const attributes = useMemo(() => {
-    const positions = Array(size)
+    const seeds = Array(size)
       .fill(0)
-      .reduce<number[]>((arr, _, i) => {
-        const r = Math.random();
-        const theta = ((1 / 2) * (Math.PI * i)) / size;
-        return arr.concat([r * Math.cos(theta), r * Math.sin(theta), 0]);
-      }, []);
+      .map((_, i) => i / size);
+    const positions = seeds.reduce<number[]>((arr, i) => {
+      const theta = 2 * Math.PI * i;
+      const r = 0.1 + 0.9 * Math.random();
+      return arr.concat([r * Math.cos(theta), r * Math.sin(theta), 0]);
+    }, []);
     const fromHex = getRGBFromColorCode(colorFrom);
     const toHex = getRGBFromColorCode(colorTo);
     const colors = Array(size)
@@ -44,21 +53,20 @@ const Particles: FC<Props> = ({ size, colorFrom, colorTo }) => {
       }, []);
     const position = new Float32BufferAttribute(positions, 3);
     const color = new Uint8BufferAttribute(colors, 4, true);
-    return { position, color };
+    const seed = new Float32BufferAttribute(seeds, 1);
+    return { position, color, seed };
   }, [colorFrom, colorTo, size]);
 
+  const u_period = useRef(period);
   const uniforms = useMemo<Record<string, IUniform>>(
     () => ({
       u_size: { value: 2.0 },
       u_time: { value: 0.0 },
       u_dt: { value: 0.0 },
-      u_period: { value: 10 },
-      u_time_randomness: { value: 0.01 },
-      u_radius_velocity: { value: 100 },
-      u_theta_velocity: { value: 0.001 },
-      u_min_radius: { value: 0.5 },
+      u_period: { value: u_period.current },
+      u_rotate: { value: rotate },
     }),
-    []
+    [rotate]
   );
 
   const init = useRef(false);
@@ -73,6 +81,7 @@ const Particles: FC<Props> = ({ size, colorFrom, colorTo }) => {
       const time = clock.getElapsedTime();
       points.current.material.uniforms.u_time.value = time;
       points.current.material.uniforms.u_dt.value = time - state.clock.oldTime;
+      points.current.material.uniforms.u_period.value = u_period.current;
     }
   });
 
@@ -81,6 +90,10 @@ const Particles: FC<Props> = ({ size, colorFrom, colorTo }) => {
       init.current = false;
     }
   }, [colorFrom, colorTo]);
+
+  useEffect(() => {
+    u_period.current = period;
+  }, [period]);
 
   return (
     <points ref={points}>

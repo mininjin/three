@@ -1,23 +1,28 @@
 import { atom, useRecoilState, useRecoilValue } from "recoil";
 
 const ColorFromAtom = atom<string>({
-  key: "ColorFromAtom",
+  key: "ColorFromCAtom",
   default: "#f483f3",
 });
 
 const ColorToAtom = atom<string>({
-  key: "ColorToAtom",
+  key: "ColorToCAtom",
   default: "#3129a1",
 });
 
 const AmountAtom = atom<number>({
-  key: "ParticleAmountAtom",
+  key: "ParticleAmountCAtom",
   default: 5000,
 });
 
 const PeriodAtom = atom<number>({
-  key: "ParticlePeriodAtom",
+  key: "ParticlePeriodCAtom",
   default: 1,
+});
+
+const CircleAtom = atom<boolean>({
+  key: "ParticleCircleCAtom",
+  default: false,
 });
 
 export const useColorFromState = () => useRecoilState(ColorFromAtom);
@@ -31,3 +36,6 @@ export const useAmountValue = () => useRecoilValue(AmountAtom);
 
 export const usePeriodState = () => useRecoilState(PeriodAtom);
 export const usePeriodValue = () => useRecoilValue(PeriodAtom);
+
+export const useCircleState = () => useRecoilState(CircleAtom);
+export const useCircleValue = () => useRecoilValue(CircleAtom);
