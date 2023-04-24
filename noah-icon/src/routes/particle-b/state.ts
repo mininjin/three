@@ -15,6 +15,11 @@ const AmountAtom = atom<number>({
   default: 5000,
 });
 
+const DistributionAtom = atom<number>({
+  key: "ParticleDistributionBAtom",
+  default: 2,
+});
+
 const PeriodAtom = atom<number>({
   key: "ParticlePeriodBAtom",
   default: 1,
@@ -31,3 +36,6 @@ export const useAmountValue = () => useRecoilValue(AmountAtom);
 
 export const usePeriodState = () => useRecoilState(PeriodAtom);
 export const usePeriodValue = () => useRecoilValue(PeriodAtom);
+
+export const useDistributionState = () => useRecoilState(DistributionAtom);
+export const useDistributionValue = () => useRecoilValue(DistributionAtom);

@@ -51,13 +51,15 @@ uniform float u_rotate;
 
 uniform float u_time;
 
-vec2 rose(float t, float w1, float w2) {
-  return cos(w1 * t) * vec2(cos(w2 * t), sin(w2 * t));
+vec2 hypotrochoid(float t, float w1, float w2) {
+  float x = (1. - w1) * cos(t) + w2 * cos((1. - w1) * t / w1);
+  float y = (1. - w1) * sin(t) - w2 * sin((1. - w1) * t / w1);
+  return vec2(x, y);
 }
 
 vec2 getPositonA(vec2 pos, float t, float seed) {
   float r = length(pos);
-  pos = rose(t, 2., seed);
+  pos = hypotrochoid(t, seed, 1.);
   pos.x += 0.5 * noise(vec2(pos.x, t)) * sin(t * noise(vec2(r, seed * t)));
   pos.y += 1. * noise(vec2(pos.y, t)) * sin(t * noise(vec2(r, seed * t))) + 0.5 * sin(noise(vec2(r, seed * t)));
   return pos;
@@ -69,7 +71,7 @@ void main() {
   vec4 modelPosition = modelMatrix * vec4(position, 1.0);
 
   vec2 pos = modelPosition.xy;
-  float t = u_time / u_period + 2. * PI * seed + 100000.;
+  float t = (u_time + 10.) / u_period + 2. * PI * seed;
   float dt = u_dt / u_period;
 
   float r = length(pos);

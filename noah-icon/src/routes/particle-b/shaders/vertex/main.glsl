@@ -71,7 +71,7 @@ void main() {
   vec4 modelPosition = modelMatrix * vec4(position, 1.0);
 
   vec2 pos = modelPosition.xy;
-  float t = u_time / u_period + 2. * PI * seed;
+  float t = (u_time + 1000.) / u_period + 2. * PI * seed;
   float dt = u_dt / u_period;
 
   float r = length(pos);

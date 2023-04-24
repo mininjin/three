@@ -20,7 +20,7 @@ const ModelConfig: FC<Props> = ({ className = "" }) => {
   const [period, handleSetPeriod] = usePeriodState();
 
   return (
-    <div className={`flex flex-col ${className}`}>
+    <div className={`flex flex-col space-y-6 ${className}`}>
       <ColorConfig color={from} onInput={handleSetFrom} />
       <ColorConfig color={to} onInput={handleSetTo} />
       <AmountConfig amount={amount} onInput={handleSetAmount} />

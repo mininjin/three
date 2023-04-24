@@ -38,7 +38,7 @@ const ColorConfig: FC<Props> = ({ className = "", color, onInput }) => {
   );
 
   return (
-    <div className={`flex space-x-6 ${className}`}>
+    <div className={`flex space-y-3 flex-col ${className}`}>
       <div className="flex space-x-1.5">
         <label htmlFor="red">Red</label>
         <input
