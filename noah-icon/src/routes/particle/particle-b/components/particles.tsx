@@ -8,8 +8,8 @@ import {
   SphereGeometry,
   Uint8BufferAttribute,
 } from "three";
-import { getRGBFromColorCode } from "../../../lib/color";
-import { fragmentShader, vertexShader } from "./shaders";
+import { getRGBFromColorCode } from "@/lib/color";
+import { fragmentShader, vertexShader } from "../shaders";
 
 type Props = {
   size: number;
@@ -60,7 +60,7 @@ const Particles: FC<Props> = ({
   const u_period = useRef(period);
   const uniforms = useMemo<Record<string, IUniform>>(
     () => ({
-      u_size: { value: 2.0 },
+      u_size: { value: 1.0 },
       u_time: { value: 0.0 },
       u_dt: { value: 0.0 },
       u_period: { value: u_period.current },

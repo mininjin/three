@@ -2,14 +2,15 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { RecoilRoot } from "recoil";
 import {
-  createBrowserRouter,
+  createHashRouter,
   RouteObject,
   RouterProvider,
 } from "react-router-dom";
 import "./index.css";
-import ParticlesA from "./routes/particle-a";
-import ParticlesB from "./routes/particle-b";
-import ParticlesC from "./routes/particle-c";
+import ParticlesA from "./routes/particle/particle-a";
+import ParticlesB from "./routes/particle/particle-b";
+import ParticlesC from "./routes/particle/particle-c";
+import Redirect from "./routes/redirect";
 
 export const routeObjects: Record<string, RouteObject> = {
   "particle type A": {
@@ -26,7 +27,12 @@ export const routeObjects: Record<string, RouteObject> = {
   },
 };
 
-const router = createBrowserRouter(Object.values(routeObjects));
+const router = createHashRouter(
+  Object.values(routeObjects).concat([
+    { path: "/", element: <Redirect path="/particle" /> },
+    { path: "/particle", element: <Redirect path="/particle/a" /> },
+  ])
+);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
