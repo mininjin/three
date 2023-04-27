@@ -12,6 +12,7 @@ import ColorConfig from "./Color";
 import AmountConfig from "./Amount";
 import PeriodConfig from "./Period";
 import CircleConfig from "./Circle";
+import SvgConfig from "./Svg";
 
 type Props = {
   className?: string;
@@ -63,6 +64,7 @@ const ModelConfig: FC<Props> = ({ className = "" }) => {
         onInput={handleSetSize}
       />
       <PeriodConfig period={period} onInput={handleSetPeriod} />
+      <SvgConfig />
       <CircleConfig />
     </div>
   );

@@ -49,6 +49,24 @@ const SizeAtom = atom<number>({
   effects: [localStorageEffect("ParticleSizeAtom")],
 });
 
+const SvgAtom = atom<string | null>({
+  key: "SvgAtom",
+  default: null,
+  effects: [localStorageEffect("SvgAtom")],
+});
+
+const SvgScaleAtom = atom<number>({
+  key: "SvgScaleAtom",
+  default: 0.001,
+  effects: [localStorageEffect("SvgScaleAtom")],
+});
+
+const SvgPositionAtom = atom<[number, number]>({
+  key: "SvgPositionAtom",
+  default: [0, 0],
+  effects: [localStorageEffect("SvgPositionAtom")],
+});
+
 export const useBackgroundState = () => useRecoilState(BackgroundAtom);
 export const useBackgroundValue = () => useRecoilValue(BackgroundAtom);
 
@@ -72,3 +90,12 @@ export const useDistributionValue = () => useRecoilValue(DistributionAtom);
 
 export const useSizeState = () => useRecoilState(SizeAtom);
 export const useSizeValue = () => useRecoilValue(SizeAtom);
+
+export const useSvgState = () => useRecoilState(SvgAtom);
+export const useSvgValue = () => useRecoilValue(SvgAtom);
+
+export const useSvgScaleState = () => useRecoilState(SvgScaleAtom);
+export const useSvgScaleValue = () => useRecoilValue(SvgScaleAtom);
+
+export const useSvgPositionState = () => useRecoilState(SvgPositionAtom);
+export const useSvgPositionValue = () => useRecoilValue(SvgPositionAtom);

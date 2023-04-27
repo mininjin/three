@@ -33,7 +33,7 @@ function Layout({ children, config }: Props) {
           </Canvas>
         </div>
 
-        {config}
+        <div className="h-full overflow-y-scroll">{config}</div>
       </div>
     </div>
   );
