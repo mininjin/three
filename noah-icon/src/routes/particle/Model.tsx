@@ -6,10 +6,12 @@ import {
   useColorToValue,
   useDistributionValue,
   usePeriodValue,
+  useSizeValue,
 } from "@/state";
 import { Color, DoubleSide } from "three";
 
 export type ParticleProps = {
+  amount: number;
   size: number;
   period: number;
   colorFrom: string;
@@ -26,10 +28,10 @@ const ParticleModelData: FC<Props> = ({ particle: Particles }) => {
   const to = useColorToValue();
   const amount = useAmountValue();
   const period = usePeriodValue();
+  const size = useSizeValue();
 
   const length = useDistributionValue();
   const show = useCircleValue();
-
 
   return (
     <>
@@ -48,7 +50,8 @@ const ParticleModelData: FC<Props> = ({ particle: Particles }) => {
               key={`${Date.now()}-${i}`}
               rotate={(Math.PI * 2 * i) / length}
               period={period}
-              size={Math.floor(amount / length)}
+              amount={Math.floor(amount / length)}
+              size={size}
               colorFrom={from}
               colorTo={to}
             />

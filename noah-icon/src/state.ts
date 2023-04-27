@@ -1,6 +1,12 @@
 import { atom, useRecoilState, useRecoilValue } from "recoil";
 import { localStorageEffect } from "./lib/state";
 
+const BackgroundAtom = atom<string>({
+  key: "BackgroundAtom",
+  default: "#101827",
+  effects: [localStorageEffect("ParticleBackgroundAtom")],
+});
+
 const ColorFromAtom = atom<string>({
   key: "ColorFromAtom",
   default: "#f483f3",
@@ -37,6 +43,15 @@ const DistributionAtom = atom<number>({
   effects: [localStorageEffect("ParticleDistributionAtom")],
 });
 
+const SizeAtom = atom<number>({
+  key: "ParticleSizeAtom",
+  default: 1,
+  effects: [localStorageEffect("ParticleSizeAtom")],
+});
+
+export const useBackgroundState = () => useRecoilState(BackgroundAtom);
+export const useBackgroundValue = () => useRecoilValue(BackgroundAtom);
+
 export const useColorFromState = () => useRecoilState(ColorFromAtom);
 export const useColorToState = () => useRecoilState(ColorToAtom);
 
@@ -54,3 +69,6 @@ export const useCircleValue = () => useRecoilValue(CircleAtom);
 
 export const useDistributionState = () => useRecoilState(DistributionAtom);
 export const useDistributionValue = () => useRecoilValue(DistributionAtom);
+
+export const useSizeState = () => useRecoilState(SizeAtom);
+export const useSizeValue = () => useRecoilValue(SizeAtom);

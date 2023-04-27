@@ -1,34 +1,31 @@
 import { ChangeEvent, FC, useCallback } from "react";
-import { useDistributionState } from "../../state";
 
 type Props = {
+  id: string;
+  label: string;
   className?: string;
   amount: number;
   onInput: (s: number) => void;
+  max: number;
+  min: number;
+  step: number;
 };
 
-const MAX = 10000;
-const MIN = 100;
-const STEP = 100;
-
-const AmountConfig: FC<Props> = ({ className = "", amount, onInput }) => {
+const AmountConfig: FC<Props> = ({
+  id,
+  className = "",
+  amount,
+  onInput,
+  max,
+  min,
+  step,
+  label,
+}) => {
   const handleInput = useCallback(
     (e: ChangeEvent) => {
       const v = e.target as HTMLInputElement;
       const value = Number(v.value);
-      if (value <= MAX && value >= MIN) onInput(value);
-    },
-    [onInput]
-  );
-
-  const [distribution, setDistribution] = useDistributionState();
-  const handleInputDist = useCallback(
-    (e: ChangeEvent) => {
-      const v = e.target as HTMLInputElement;
-      const value = Number(v.value);
-      if (value <= 10 && value >= 1) {
-        setDistribution(value);
-      }
+      if (value <= max && value >= min) onInput(value);
     },
     [onInput]
   );
@@ -36,26 +33,16 @@ const AmountConfig: FC<Props> = ({ className = "", amount, onInput }) => {
   return (
     <div className={`flex flex-col space-y-3 ${className}`}>
       <div className="flex space-x-1.5">
-        <label htmlFor="red">粒子数</label>
+        <label htmlFor={id}>{label}</label>
         <input
+          id={id}
           type="number"
-          min={MIN}
-          max={MAX}
-          step={STEP}
+          min={min}
+          max={max}
+          step={step}
           value={amount}
           onChange={handleInput}
           className="w-24"
-        />
-      </div>
-      <div className="flex space-x-1.5">
-        <label htmlFor="red">分割数</label>
-        <input
-          type="number"
-          min={1}
-          max={10}
-          step={1}
-          value={distribution}
-          onChange={handleInputDist}
         />
       </div>
     </div>

@@ -9,17 +9,11 @@ import {
   Uint8BufferAttribute,
 } from "three";
 import { getRGBFromColorCode } from "@/lib/color";
-import { fragmentShader, vertexShader } from "../shaders";
+import { fragmentShader, vertexShader } from "./shaders";
+import { ParticleProps } from "../../Model";
 
-type Props = {
-  size: number;
-  period: number;
-  colorFrom: string;
-  colorTo: string;
-  rotate?: number;
-};
-
-const Particles: FC<Props> = ({
+const Particles: FC<ParticleProps> = ({
+  amount,
   size,
   colorFrom,
   colorTo,
@@ -28,9 +22,9 @@ const Particles: FC<Props> = ({
 }) => {
   const points = useRef<Points<SphereGeometry, ShaderMaterial>>(null);
   const attributes = useMemo(() => {
-    const seeds = Array(size)
+    const seeds = Array(amount)
       .fill(0)
-      .map((_, i) => i / size);
+      .map((_, i) => i / amount);
     const positions = seeds.reduce<number[]>((arr, i) => {
       const theta = 2 * Math.PI * i;
       const r = 0.1 + 0.9 * Math.random();
@@ -38,10 +32,10 @@ const Particles: FC<Props> = ({
     }, []);
     const fromHex = getRGBFromColorCode(colorFrom);
     const toHex = getRGBFromColorCode(colorTo);
-    const colors = Array(size)
+    const colors = Array(amount)
       .fill(0)
       .reduce<number[]>((arr, _, i) => {
-        const t = i / size;
+        const t = i / amount;
         const rgb = Array(3)
           .fill(0)
           .map((_, i) => {
@@ -55,12 +49,13 @@ const Particles: FC<Props> = ({
     const color = new Uint8BufferAttribute(colors, 4, true);
     const seed = new Float32BufferAttribute(seeds, 1);
     return { position, color, seed };
-  }, [colorFrom, colorTo, size]);
+  }, [colorFrom, colorTo, amount]);
 
   const u_period = useRef(period);
+  const u_size = useRef(size);
   const uniforms = useMemo<Record<string, IUniform>>(
     () => ({
-      u_size: { value: 1.0 },
+      u_size: { value: u_size.current },
       u_time: { value: 0.0 },
       u_dt: { value: 0.0 },
       u_period: { value: u_period.current },
@@ -82,6 +77,7 @@ const Particles: FC<Props> = ({
       points.current.material.uniforms.u_time.value = time;
       points.current.material.uniforms.u_dt.value = time - state.clock.oldTime;
       points.current.material.uniforms.u_period.value = u_period.current;
+      points.current.material.uniforms.u_size.value = u_size.current;
     }
   });
 
@@ -93,7 +89,8 @@ const Particles: FC<Props> = ({
 
   useEffect(() => {
     u_period.current = period;
-  }, [period]);
+    u_size.current = size;
+  }, [period, size]);
 
   return (
     <points ref={points}>

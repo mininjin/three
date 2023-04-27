@@ -6,12 +6,13 @@ import {
 } from "../../lib/color";
 
 type Props = {
+  id: string;
   className?: string;
   color: string;
   onInput: (s: string) => void;
 };
 
-const ColorConfig: FC<Props> = ({ className = "", color, onInput }) => {
+const ColorConfig: FC<Props> = ({ id, className = "", color, onInput }) => {
   const { r, g, b } = useMemo(() => {
     const rgb = getRGBFromHex(getHefFromColorCode(color));
     return { r: rgb[0], g: rgb[1], b: rgb[2] };
@@ -38,10 +39,11 @@ const ColorConfig: FC<Props> = ({ className = "", color, onInput }) => {
   );
 
   return (
-    <div className={`flex flex-col space-y-3 ${className}`}>
+    <div className={`flex flex-col space-y-1.5 ${className}`}>
       <div className="flex space-x-1.5">
-        <label htmlFor="red">Red</label>
+        <label className="w-12" htmlFor={`${id}-red`}>Red</label>
         <input
+          id={`${id}-red`}
           type="range"
           min="0"
           max="255"
@@ -50,8 +52,9 @@ const ColorConfig: FC<Props> = ({ className = "", color, onInput }) => {
         />
       </div>
       <div className="flex space-x-1.5">
-        <label htmlFor="red">Green</label>
+        <label className="w-12" htmlFor={`${id}-green`}>Green</label>
         <input
+          id={`${id}-green`}
           type="range"
           min="0"
           max="255"
@@ -60,8 +63,9 @@ const ColorConfig: FC<Props> = ({ className = "", color, onInput }) => {
         />
       </div>
       <div className="flex space-x-1.5">
-        <label htmlFor="red">Blue</label>
+        <label className="w-12" htmlFor={`${id}-blue`}>Blue</label>
         <input
+          id={`${id}-blue`}
           type="range"
           min="0"
           max="255"
