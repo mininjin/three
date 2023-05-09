@@ -7,25 +7,24 @@ import {
   useDistributionState,
   usePeriodState,
   useSizeState,
-} from "../../state";
-import ColorConfig from "./Color";
-import AmountConfig from "./Amount";
-import PeriodConfig from "./Period";
-import CircleConfig from "./Circle";
-import SvgConfig from "./Svg";
+} from "@/state";
+import ColorConfig from "@/components/Config/Color";
+import AmountConfig from "@/components/Config/Amount";
+import PeriodConfig from "@/components/Config/Period";
+import SvgConfig from "@/components/Config/Svg";
 
 type Props = {
   className?: string;
 };
 
 const ModelConfig: FC<Props> = ({ className = "" }) => {
-  const [background, handleSetBackground] = useBackgroundState();
-  const [from, handleSetFrom] = useColorFromState();
-  const [to, handleSetTo] = useColorToState();
-  const [amount, handleSetAmount] = useAmountState();
+  const [background, handleSetBackground] = useBackgroundState("particle");
+  const [from, handleSetFrom] = useColorFromState("particle");
+  const [to, handleSetTo] = useColorToState("particle");
+  const [amount, handleSetAmount] = useAmountState("particle");
   const [distribution, handleSetDistribution] = useDistributionState();
-  const [size, handleSetSize] = useSizeState();
-  const [period, handleSetPeriod] = usePeriodState();
+  const [size, handleSetSize] = useSizeState("particle");
+  const [period, handleSetPeriod] = usePeriodState("particle");
 
   return (
     <div className={`flex flex-col space-y-6 px-3 ${className}`}>
@@ -64,8 +63,7 @@ const ModelConfig: FC<Props> = ({ className = "" }) => {
         onInput={handleSetSize}
       />
       <PeriodConfig period={period} onInput={handleSetPeriod} />
-      <SvgConfig />
-      <CircleConfig />
+      <SvgConfig type="particle" />
     </div>
   );
 };

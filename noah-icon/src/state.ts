@@ -1,40 +1,60 @@
-import { atom, useRecoilState, useRecoilValue } from "recoil";
+import { atom, atomFamily, useRecoilState, useRecoilValue } from "recoil";
 import { localStorageEffect } from "./lib/state";
 
-const BackgroundAtom = atom<string>({
-  key: "BackgroundAtom",
+export type DataType = "particle" | "curve";
+
+const BackgroundAtom = atomFamily<string, DataType>({
+  key: "BackgroundAtomFamily",
   default: "#101827",
-  effects: [localStorageEffect("ParticleBackgroundAtom")],
+  effects: [localStorageEffect("ParticleBackgroundAtomFamily")],
 });
 
-const ColorFromAtom = atom<string>({
-  key: "ColorFromAtom",
+const ColorFromAtom = atomFamily<string, DataType>({
+  key: "ColorFromAtomFamily",
   default: "#f483f3",
-  effects: [localStorageEffect("ParticleColorFromAtom")],
+  effects: [localStorageEffect("ParticleColorFromAtomFamily")],
 });
 
-const ColorToAtom = atom<string>({
-  key: "ColorToAtom",
+const ColorToAtom = atomFamily<string, DataType>({
+  key: "ColorToAtomFamily",
   default: "#3129a1",
-  effects: [localStorageEffect("ParticleColorFromAtom")],
+  effects: [localStorageEffect("ParticleColorFromAtomFamily")],
 });
 
-const AmountAtom = atom<number>({
-  key: "ParticleAmountAtom",
+const AmountAtom = atomFamily<number, DataType>({
+  key: "ParticleAmountAtomFamily",
   default: 5000,
-  effects: [localStorageEffect("ParticleAmountAtom")],
+  effects: [localStorageEffect("ParticleAmountAtomFamily")],
 });
 
-const PeriodAtom = atom<number>({
-  key: "ParticlePeriodAtom",
+const PeriodAtom = atomFamily<number, DataType>({
+  key: "ParticlePeriodAtomFamily",
   default: 1,
-  effects: [localStorageEffect("ParticlePeriodAtom")],
+  effects: [localStorageEffect("ParticlePeriodAtomFamily")],
 });
 
-const CircleAtom = atom<boolean>({
-  key: "ParticleCircleAtom",
-  default: false,
-  effects: [localStorageEffect("ParticleCircleAtom")],
+const SizeAtom = atomFamily<number, DataType>({
+  key: "ParticleSizeAtomFamily",
+  default: 1,
+  effects: [localStorageEffect("ParticleSizeAtomFamily")],
+});
+
+const SvgAtom = atomFamily<string | null, DataType>({
+  key: "SvgAtomFamily",
+  default: null,
+  effects: [localStorageEffect("SvgAtomFamily")],
+});
+
+const SvgScaleAtom = atomFamily<number, DataType>({
+  key: "SvgScaleAtomFamily",
+  default: 0.001,
+  effects: [localStorageEffect("SvgScaleAtomFamily")],
+});
+
+const SvgPositionAtom = atomFamily<[number, number], DataType>({
+  key: "SvgPositionAtomFamily",
+  default: [0, 0],
+  effects: [localStorageEffect("SvgPositionAtomFamily")],
 });
 
 const DistributionAtom = atom<number>({
@@ -43,59 +63,46 @@ const DistributionAtom = atom<number>({
   effects: [localStorageEffect("ParticleDistributionAtom")],
 });
 
-const SizeAtom = atom<number>({
-  key: "ParticleSizeAtom",
-  default: 1,
-  effects: [localStorageEffect("ParticleSizeAtom")],
-});
+export const useBackgroundState = (type: DataType) =>
+  useRecoilState(BackgroundAtom(type));
+export const useBackgroundValue = (type: DataType) =>
+  useRecoilValue(BackgroundAtom(type));
 
-const SvgAtom = atom<string | null>({
-  key: "SvgAtom",
-  default: null,
-  effects: [localStorageEffect("SvgAtom")],
-});
+export const useColorFromState = (type: DataType) =>
+  useRecoilState(ColorFromAtom(type));
+export const useColorToState = (type: DataType) =>
+  useRecoilState(ColorToAtom(type));
 
-const SvgScaleAtom = atom<number>({
-  key: "SvgScaleAtom",
-  default: 0.001,
-  effects: [localStorageEffect("SvgScaleAtom")],
-});
+export const useColorFromValue = (type: DataType) =>
+  useRecoilValue(ColorFromAtom(type));
+export const useColorToValue = (type: DataType) =>
+  useRecoilValue(ColorToAtom(type));
 
-const SvgPositionAtom = atom<[number, number]>({
-  key: "SvgPositionAtom",
-  default: [0, 0],
-  effects: [localStorageEffect("SvgPositionAtom")],
-});
+export const useAmountState = (type: DataType) =>
+  useRecoilState(AmountAtom(type));
+export const useAmountValue = (type: DataType) =>
+  useRecoilValue(AmountAtom(type));
 
-export const useBackgroundState = () => useRecoilState(BackgroundAtom);
-export const useBackgroundValue = () => useRecoilValue(BackgroundAtom);
-
-export const useColorFromState = () => useRecoilState(ColorFromAtom);
-export const useColorToState = () => useRecoilState(ColorToAtom);
-
-export const useColorFromValue = () => useRecoilValue(ColorFromAtom);
-export const useColorToValue = () => useRecoilValue(ColorToAtom);
-
-export const useAmountState = () => useRecoilState(AmountAtom);
-export const useAmountValue = () => useRecoilValue(AmountAtom);
-
-export const usePeriodState = () => useRecoilState(PeriodAtom);
-export const usePeriodValue = () => useRecoilValue(PeriodAtom);
-
-export const useCircleState = () => useRecoilState(CircleAtom);
-export const useCircleValue = () => useRecoilValue(CircleAtom);
+export const usePeriodState = (type: DataType) =>
+  useRecoilState(PeriodAtom(type));
+export const usePeriodValue = (type: DataType) =>
+  useRecoilValue(PeriodAtom(type));
 
 export const useDistributionState = () => useRecoilState(DistributionAtom);
 export const useDistributionValue = () => useRecoilValue(DistributionAtom);
 
-export const useSizeState = () => useRecoilState(SizeAtom);
-export const useSizeValue = () => useRecoilValue(SizeAtom);
+export const useSizeState = (type: DataType) => useRecoilState(SizeAtom(type));
+export const useSizeValue = (type: DataType) => useRecoilValue(SizeAtom(type));
 
-export const useSvgState = () => useRecoilState(SvgAtom);
-export const useSvgValue = () => useRecoilValue(SvgAtom);
+export const useSvgState = (type: DataType) => useRecoilState(SvgAtom(type));
+export const useSvgValue = (type: DataType) => useRecoilValue(SvgAtom(type));
 
-export const useSvgScaleState = () => useRecoilState(SvgScaleAtom);
-export const useSvgScaleValue = () => useRecoilValue(SvgScaleAtom);
+export const useSvgScaleState = (type: DataType) =>
+  useRecoilState(SvgScaleAtom(type));
+export const useSvgScaleValue = (type: DataType) =>
+  useRecoilValue(SvgScaleAtom(type));
 
-export const useSvgPositionState = () => useRecoilState(SvgPositionAtom);
-export const useSvgPositionValue = () => useRecoilValue(SvgPositionAtom);
+export const useSvgPositionState = (type: DataType) =>
+  useRecoilState(SvgPositionAtom(type));
+export const useSvgPositionValue = (type: DataType) =>
+  useRecoilValue(SvgPositionAtom(type));

@@ -1,7 +1,6 @@
 import { FC, useMemo } from "react";
 import {
   useAmountValue,
-  useCircleValue,
   useColorFromValue,
   useColorToValue,
   useDistributionValue,
@@ -11,8 +10,8 @@ import {
   useSvgScaleValue,
   useSvgValue,
 } from "@/state";
-import { Color, DoubleSide, Vector3 } from "three";
-import SvgPath from "./Svg";
+import { Vector3 } from "three";
+import SvgPath from "../../components/Svg";
 import { loadPathDataFromSvg } from "@/lib/loader";
 
 export type ParticleProps = {
@@ -29,23 +28,22 @@ type Props = {
 };
 
 const ParticleModelData: FC<Props> = ({ particle: Particles }) => {
-  const from = useColorFromValue();
-  const to = useColorToValue();
-  const amount = useAmountValue();
-  const period = usePeriodValue();
-  const size = useSizeValue();
+  const from = useColorFromValue("particle");
+  const to = useColorToValue("particle");
+  const amount = useAmountValue("particle");
+  const period = usePeriodValue("particle");
+  const size = useSizeValue("particle");
 
   const length = useDistributionValue();
-  const show = useCircleValue();
 
-  const svg = useSvgValue();
+  const svg = useSvgValue("particle");
   const paths = useMemo(() => (svg ? loadPathDataFromSvg(svg) : []), [svg]);
-  const svgScale = useSvgScaleValue();
+  const svgScale = useSvgScaleValue("particle");
   const svgScaleVec = useMemo(
     () => new Vector3(svgScale, svgScale, svgScale),
     [svgScale]
   );
-  const svgPosition = useSvgPositionValue();
+  const svgPosition = useSvgPositionValue("particle");
   const svgPositionVec = useMemo(
     () => new Vector3(...svgPosition, 0),
     [svgPosition]
@@ -53,13 +51,6 @@ const ParticleModelData: FC<Props> = ({ particle: Particles }) => {
 
   return (
     <>
-      {show && (
-        <mesh>
-          <ringGeometry args={[0.99, 1]} />
-          <meshBasicMaterial color={new Color("#888888")} side={DoubleSide} />
-        </mesh>
-      )}
-
       {paths.length > 0 && (
         <group scale={svgScaleVec} position={svgPositionVec}>
           {paths.map((path, i) => (

@@ -1,15 +1,21 @@
 import { loadTextFromSvg } from "@/lib/loader";
-import { useSvgPositionState, useSvgScaleState, useSvgState } from "@/state";
+import {
+  DataType,
+  useSvgPositionState,
+  useSvgScaleState,
+  useSvgState,
+} from "@/state";
 import { ChangeEvent, FC, useCallback } from "react";
 
 type Props = {
   className?: string;
+  type: DataType;
 };
 
-const SvgConfig: FC<Props> = ({ className = "" }) => {
-  const [file, onInput] = useSvgState();
-  const [scale, setScale] = useSvgScaleState();
-  const [position, setPosition] = useSvgPositionState();
+const SvgConfig: FC<Props> = ({ className = "", type }) => {
+  const [file, onInput] = useSvgState(type);
+  const [scale, setScale] = useSvgScaleState(type);
+  const [position, setPosition] = useSvgPositionState(type);
   const handleInput = useCallback(
     async (e?: ChangeEvent) => {
       const v = e?.target as HTMLInputElement | undefined;
